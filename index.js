@@ -1,3 +1,19 @@
+var start, end,
+	startPos, endPos,
+	startElement, endElement,
+	isFirstChoice = true;
+
+function debug() {
+	console.log('**************');
+	console.log(debug.caller);
+	console.log(startPos);
+	// console.log(startElement);
+	console.log(endPos);
+	console.log('compare result: ' + isPrevious());
+	// console.log(endElement);
+	console.log('|||||||||||||||\n');
+}
+
 //清除现有的选区
 
 function clear() {
@@ -112,60 +128,77 @@ function getSelectedText() {
 		return textRange.text;
 	}
 }
-var start, end,
-	startPos, endPos,
-	startElement, endElement;
 
 //确定起点
 
 function selectBegin() {
-	console.log('start');
+	if (!isFirstChoice) {
+		start.collapseToStart();
+	}
 	// $('.highlighted').remove();
 	start = window.getSelection();
 	start.modify('extend', 'forward', 'character');
-	//显示游标
-	// var newNode = document.createElement('span');
-	// newNode.setAttribute('class', 'highlighted');
-	// newNode.appendChild(document.createTextNode('|||'));
-	// start.getRangeAt(0).insertNode(newNode);
-	if(start.type !== 'None'){
+	if (start.type !== 'None') {
+		//显示游标
+		// var newNode = document.createElement('span');
+		// newNode.setAttribute('class', 'highlighted');
+		// newNode.appendChild(document.createTextNode('|||'));
+		// start.getRangeAt(0).insertNode(newNode);
+
 		startPos = start.baseOffset;
 		startElement = start.baseNode.parentNode;
 		console.log(start.toString() + ' is: #' + startPos + ' of ' + startElement.toString());
+		debug();
 	}
 }
 
 //确定终点
 
 function selectEnd() {
-	console.log('end');
+	debug();
+	if (!isFirstChoice) {
+		start.collapseToEnd();
+	}
 	end = window.getSelection();
 	end.modify('extend', 'backward', 'character');
-	endPos = end.baseOffset;
-	endElement = start.baseNode.parentNode;
-	console.log(end.toString() + ' is: #' + endPos + ' of ' + endElement.toString());
+	if (end.type !== 'None' && end.isCollapsed !== true) {
+		endPos = end.baseOffset;
+		endElement = start.baseNode.parentNode;
+		console.log(end.toString() + ' is: #' + endPos + ' of ' + endElement.toString());
+		debug();
 
-	setRange({
-		start: startPos,
-		startElement: startElement,
-		end: endPos,
-		endElement: endElement
-	});
-
-	console.log('User select text: ' + getSelectedText());
+		selectText();
+	}
 }
 
-function selectText() {
+function isPrevious(){
+	var result = false;
+	//DOCUMENT_POSITION_FOLLOWING:	4
+	if(startElement.compareDocumentPosition(endElement) === 4){
+		result = true;
+	}
+	if(startElement === endElement && startPos < endPos){
+		result = true;
+	}
+	return result;
+}
+//根据指定的起点和终点， 选择文本
 
-	//选择文本
+function selectText() {
+	// if (!isPrevious) {
+	// 	var tmp = startPos;
+	// 	startPos = endPos;
+	// 	endPos = tmp;
+	// }
 	setRange({
-		start: startPos,
-		startElement: startElement,
-		end: endPos,
-		endElement: endElement
+		start: isPrevious ? startPos: endPos,
+		startElement: isPrevious ? startElement : endElement,
+		end: isPrevious ? endPos : startPos,
+		endElement: isPrevious ? endElement : startElement
 	});
 
 	console.log('User select text: ' + getSelectedText());
+	isFirstChoice = false;
 }
 
 $(document).ready(function() {
