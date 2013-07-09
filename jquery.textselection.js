@@ -5,6 +5,7 @@
 		startElement: undefined,
 		endPos: undefined,
 		endElement: undefined,
+		// isFirstChoice: true,
 
 		//清除现有的选区
 		clear: function() {
@@ -117,8 +118,6 @@
 
 			var startNode = false;
 			var endNode = false;
-
-
 
 			if (window.getSelection) {
 
