@@ -1,9 +1,19 @@
 $(document).ready(function() {
 	$('#begin').click(function() {
-		$('body').textSelect('selectBegin');
+		$('#content').endSelect('end');
+		$('#content').startSelect('begin');
 	});
 
 	$('#end').click(function() {
-		$('body').textSelect('selectEnd');
+		$('#content').endSelect('begin');
+		$('#content').startSelect('end');
+	});
+
+	$('#text').click(function() {
+		alert($('#content').getSelection().toString());
+	});
+
+	$('#clear').click(function() {
+		$('#content').clearSelection();
 	});
 });

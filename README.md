@@ -3,33 +3,22 @@ Universal-Touch-Friendly-Text-Selection-Plugin
 
 It's a jQuery plugin to minus the inconvenience of selecting text on touch devices~
 
-egin')
 
-## 进入起点选择模式
+## 进入 起点/终点 选择模式
 ```js
-$('body').textSelect('selectBegin');
+$el.startSelect(pivot, options); // pivot = 'begin', 'end'; options = {range: xxx; xxx: xxx}
 ```
 
-## 进入终点选择模式
+## 退出 起点/终点 选择模式
 ```js
-$('body').textSelect('selectEnd');
+$el.endSelect(pivot, callback);
 ```
 ## 清除当前所有选区
 ```js
-$.textSelect('clear')
+$el.getSelection().clear();
 ```
 
 ## 获得当前选区的文字
 ```js
-$.textSelect('toString');
-```
-
-## 根据指定的节点获得选区
-```js
-$.textSelect('setRange', {
-	start : 1,
-	startElement : $('#begin'),
-	end : 3,
-	endElement : $('#end')
-});
+$el.getSelection().toString();
 ```
