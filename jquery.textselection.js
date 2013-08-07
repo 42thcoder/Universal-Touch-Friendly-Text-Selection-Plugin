@@ -218,6 +218,10 @@
 
 			console.log('unbind: ' + (pivot === 'end' ? setupStart.name : setupEnd.name));
 			this.unbind('click', pivot === 'begin' ? setupStart : setupEnd);
+
+			if (typeof callback === 'function') {
+				callback.call(this);
+			}
 		},
 
 		getSelection: function() {

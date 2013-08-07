@@ -9,8 +9,14 @@ $(document).ready(function() {
 		$('#content').startSelect('end');
 	});
 
+	$('#finish').click(function() {
+		$('#content').endSelect('end', function(){
+			window.alert('This is callback');
+		});
+	});
+
 	$('#text').click(function() {
-		alert($('#content').getSelection().toString());
+		window.alert($('#content').getSelection().toString());
 	});
 
 	$('#clear').click(function() {

@@ -15,7 +15,7 @@ $el.endSelect(pivot, callback);
 ```
 ## 清除当前所有选区
 ```js
-$el.getSelection().clear();
+$el.clearSelection();
 ```
 
 ## 获得当前选区的文字
