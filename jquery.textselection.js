@@ -2,12 +2,11 @@
 	var startPos,
 		startElement,
 		endPos,
-		endElement,
-		isFirstChoice = false;
+		endElement;
 
 	function debug() {
 		// console.log('**************');
-		console.log(debug.caller.name);
+		// console.log(debug.caller.name);
 		// console.log(startPos);
 		// console.log(startElement);
 		// console.log(endPos);
@@ -38,8 +37,6 @@
 	}
 
 	function clear() {
-		console.log('清除现有的选区');
-
 		if (window.getSelection) {
 			window.getSelection().removeAllRanges();
 		} else if (document.selection) { // IE
@@ -140,58 +137,44 @@
 			end: isStartPrevious ? endPos : startPos,
 			endElement: isStartPrevious ? endElement : startElement
 		});
-
-		// isFirstChoice = false;
 	}
 
 	//设置起点
 
 	function setupStart() {
-		// if (!isFirstChoice) {
-		// 	start.collapseToStart();
-		// }
-		// $('.highlighted').remove();
 		var start = window.getSelection();
 		start.modify('extend', 'forward', 'character');
-		if (start.type !== 'None') {
-			//显示游标
-			// var newNode = document.createElement('span');
-			// newNode.setAttribute('class', 'highlighted');
-			// newNode.appendChild(document.createTextNode('|||'));
-			// start.getRangeAt(0).insertNode(newNode);
 
+		if (start.type !== 'None') {
 			startPos = start.baseOffset;
 			startElement = start.baseNode.parentNode;
-			console.log('begin: ' + ' is: #' + startPos + ' of ' + startElement.toString());
 			console.log(start);
 
-			// if (end !== undefined) {
-			// 	selectText();
-			// }
+			if (endElement !== undefined && endPos !== undefined) {
+				console.log('起点内部， 齐全， 可以进行文字选择');
+				selectText();
+				console.log('User select text: ' + $('body').getSelection().toString());
+			}
 			debug();
 		}
 	}
 
 	function setupEnd() {
-		debug();
-		// if (!isFirstChoice) {
-		// 	start.collapseToEnd();
-		// }
-		// console.log('end选择前' +  ' is: #' + endPos + ' of ' + endElement.toString());
 		var end = window.getSelection();
 		end.modify('extend', 'backward', 'character');
-		if (end.type !== 'None' && isFirstChoice === true /*&& end.isCollapsed !== true*/ ) {
 
+		if (end.type !== 'None') {
 			endPos = end.baseOffset;
 			endElement = end.baseNode.parentNode;
-			console.log('end' + ' is: #' + endPos + ' of ' + endElement.toString());
 			console.log(end);
 			debug();
 
-			selectText();
-			console.log('User select text: ' + $('body').getSelection().toString());
+			if (startElement !== undefined && startPos !== undefined) {
+				console.log('终点内部， 齐全， 可以进行文字选择');
+				selectText();
+				console.log('User select text: ' + $('body').getSelection().toString());
+			}
 		}
-		isFirstChoice = true;
 	}
 
 	$.fn.extend({
@@ -212,15 +195,22 @@
 		endSelect: function(pivot, callback) {
 			console.log('结束选择：' + pivot);
 
-			if (pivot !== 'begin' && pivot !== 'end') {
+			if (pivot !== 'begin' && pivot !== 'end' && pivot !== 'finish') {
 				return;
 			}
 
-			console.log('unbind: ' + (pivot === 'end' ? setupStart.name : setupEnd.name));
+			console.log('unbind: ' + (pivot === 'begin' ? setupStart.name : setupEnd.name));
 			this.unbind('click', pivot === 'begin' ? setupStart : setupEnd);
 
 			if (typeof callback === 'function') {
 				callback.call(this);
+			}
+
+			if (pivot === 'finish') {
+				startElement = undefined;
+				startPos = undefined;
+				endElement = undefined;
+				endPos = undefined;
 			}
 		},
 

@@ -10,7 +10,7 @@ $(document).ready(function() {
 	});
 
 	$('#finish').click(function() {
-		$('#content').endSelect('end', function(){
+		$('#content').endSelect('finish', function(){
 			window.alert('This is callback');
 		});
 	});
