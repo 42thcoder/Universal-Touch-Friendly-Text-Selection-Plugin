@@ -1,8 +1,9 @@
-(function($) {
-	var startPos,
+var startPos,
 		startElement,
 		endPos,
 		endElement;
+(function($) {
+	
 
 	function debug() {
 		// console.log('**************');
@@ -189,7 +190,7 @@
 			options = $.extend(defaults, options);
 
 			console.log('bind: ' + (pivot === 'begin' ? setupStart.name : setupEnd.name));
-			this.bind('click', pivot === 'begin' ? setupStart : setupEnd);
+			this.bind('pointerup', pivot === 'begin' ? setupStart : setupEnd);
 		},
 
 		endSelect: function(pivot, callback) {
@@ -200,7 +201,7 @@
 			}
 
 			console.log('unbind: ' + (pivot === 'begin' ? setupStart.name : setupEnd.name));
-			this.unbind('click', pivot === 'begin' ? setupStart : setupEnd);
+			this.unbind('pointerup', pivot === 'begin' ? setupStart : setupEnd);
 
 			if (typeof callback === 'function') {
 				callback.call(this);
@@ -227,6 +228,10 @@
 
 		clearSelection: function() {
 			console.log('清除现有的选区');
+			startElement = undefined;
+			startPos = undefined;
+			endElement = undefined;
+			endPos = undefined;
 
 			clear();
 		},
